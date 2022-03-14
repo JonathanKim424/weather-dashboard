@@ -1,6 +1,21 @@
 // personal API key for OpenWeather APIs
-var apiKey = "f2d15a6e422f4a15fa49aa2a30e4bec0";
+var apiKey = "83bebf1283c4aa8fc9f9e297ba8c74e3";
 
+// luxon DateTime call
+var DateTime = luxon.DateTime;
+
+var cityNameEl = document.querySelector("#cityName");
+var currDateEl = document.querySelector("#currDate");
+var weatherIconEl = document.querySelector("#weatherIcon");
+var currTempEl = document.querySelector("#currTemp");
+var currWindEl = document.querySelector("#currWind");
+var currHumEl = document.querySelector("#currHum");
+var currUVEl = document.querySelector("#currUV");
+var weatherForecastEl = document.querySelector("#weatherForecast");
+
+var cityName;
+
+// geolocation api to provide lat and lon values given a city name, only for US locations
 var getGeoLocation = function(city) {
     var apiUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + ",us&APPID=" + apiKey;
 
@@ -8,10 +23,10 @@ var getGeoLocation = function(city) {
         .then(function(response) {
             if (response.ok) {
                 response.json().then(function(data) {
-                    console.log(data[0].name);
-                    console.log(data[0].lat);
-                    console.log(data[0].lon);
+                    // gives weather one call api lat & lon data
                     getWeatherData(data[0].lat,data[0].lon);
+                    // stores city name
+                    cityName = data[0].name;
                 });
             }
             else {
@@ -23,6 +38,7 @@ var getGeoLocation = function(city) {
         });
 };
 
+// uses one Call api to provide current and forecast weather data given lat & lon values
 var getWeatherData = function(lat,lon) {
     var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&APPID=" + apiKey + "&units=imperial";
 
@@ -30,18 +46,7 @@ var getWeatherData = function(lat,lon) {
         .then(function(response) {
             if (response.ok) {
                 response.json().then(function(data) {
-                    console.log(data);
-                    console.log("Weather Icon: " + data.current.weather[0].icon);
-                    console.log("Temp: " + data.current.temp + "F");
-                    console.log("Wind: " + data.current.wind_speed + "MPH");
-                    console.log("Humidity: " + data.current.humidity + "%");
-                    console.log("UV Index: " + data.current.uvi);
-
-                    console.log("Daily Forecast (1-5), 0 is today");
-                    console.log(data.daily[1].weather[0].icon);
-                    console.log(data.daily[1].temp.day);
-                    console.log(data.daily[1].wind_speed);
-                    console.log(data.daily[1].humidity);
+                    updateWeather(data);
                 });
             }
             else {
@@ -53,7 +58,30 @@ var getWeatherData = function(lat,lon) {
         });
 };
 
-getGeoLocation("Austin");
+// updates weather display for current and forecast
+var updateWeather = function(data) {
+    var currDate = DateTime.now();
 
-// Weather Icon:
-// http://openweathermap.org/img/wn/[icon]@2x.png
+    cityNameEl.innerHTML = cityName;
+    currDateEl.innerHTML = currDate.toLocaleString();
+    weatherIconEl.innerHTML = "<img src='http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png' width='60' height='60'>";
+    currTempEl.innerHTML = data.current.temp;
+    currWindEl.innerHTML = data.current.wind_speed;
+    currHumEl.innerHTML = data.current.humidity;
+    currUVEl.innerHTML = data.current.uvi;
+
+    // daily data starts at 0 for today, hence forecast starts at 1
+    for (var i = 1; i < 6; i++) {
+        var forecastDayEl = document.createElement("div");
+        forecastDayEl.className = "card col-12 col-lg-6 col-xl-2 bg-secondary text-white fw-bold forecastCard px-1";
+        forecastDayEl.innerHTML =
+            "<p class='fs-4'>" + currDate.plus({days: i}).toLocaleString() + "</p>" +
+            "<img src='http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png' width='60' height=60'" +
+            "<p>Temp: " + data.daily[i].temp.day + "&deg;F</p>" +
+            "<p>Wind: " + data.daily[i].wind_speed + " MPH</p>" +
+            "<p>Humidity: " + data.daily[i].humidity + "%</p>";
+        weatherForecastEl.appendChild(forecastDayEl);
+    }
+};
+
+getGeoLocation("El Paso");

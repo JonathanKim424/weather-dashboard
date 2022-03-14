@@ -4,3 +4,7 @@ header {
   align-items: center;
   height: 100px;
 }
+
+.forecastCard {
+  min-width: 150px;
+}
