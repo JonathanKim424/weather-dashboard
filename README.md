@@ -9,7 +9,7 @@ A website that queries Open Weather api and geo location to display weather info
     - Bootstrap
 * JavaScript
     - jQuery
-    - Moment.js
+    - Luxon
 * OpenWeather APIs
     - One Call API
     - Geocoding API
