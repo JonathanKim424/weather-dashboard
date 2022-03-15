@@ -106,7 +106,7 @@ var updateWeather = function(data) {
         forecastDayEl.className = "card col-12 col-lg-6 col-xl-2 bg-secondary text-white fw-bold forecastCard px-1";
         forecastDayEl.innerHTML =
             "<p class='fs-4'>" + currDate.plus({days: i}).toLocaleString() + "</p>" +
-            "<img src='http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png' width='60' height=60'" +
+            "<img src='https://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png' width='60' height=60'" +
             "<p>Temp: " + data.daily[i].temp.day + "&deg;F</p>" +
             "<p>Wind: " + data.daily[i].wind_speed + " MPH</p>" +
             "<p>Humidity: " + data.daily[i].humidity + "%</p>";
