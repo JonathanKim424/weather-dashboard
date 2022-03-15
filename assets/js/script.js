@@ -131,7 +131,7 @@ var loadSearchHistory = function() {
 
     for (var i = 0; i < cityHistory.length; i++) {
         var btn = document.createElement("button");
-        btn.className = "btnHistory col-12 btn btn-secondary";
+        btn.className = "btnHistory col-12 btn btn-secondary my-1 text-dark fw-bold";
         btn.textContent = cityHistory[i];
         $("#cityHistory").append(btn);
     }
@@ -165,6 +165,8 @@ $("#btnSearch").on("click", function(event) {
     }
 
     getGeoLocation(citySearch);
+
+    $("form").trigger("reset");
 });
 
 $("#cityHistory").on("click", ".btnHistory", function(event) {

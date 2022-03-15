@@ -2,7 +2,14 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 75px;
+  background-image: linear-gradient(.25turn, #6495ed, #0f001f);
+  transition: all .5s ease-out;
+  background-size: auto 1px;
+}
+
+.searchBar {
+  min-width: 300px;
 }
 
 .uvIndex {
