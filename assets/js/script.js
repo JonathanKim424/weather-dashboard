@@ -79,7 +79,7 @@ var updateWeather = function(data) {
 
     cityNameEl.innerHTML = cityName;
     currDateEl.innerHTML = currDate.toLocaleString();
-    weatherIconEl.innerHTML = "<img src='http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png' width='60' height='60'>";
+    weatherIconEl.innerHTML = "<img src='https://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png' width='60' height='60'>";
     currTempEl.innerHTML = data.current.temp;
     currWindEl.innerHTML = data.current.wind_speed;
     currHumEl.innerHTML = data.current.humidity;
