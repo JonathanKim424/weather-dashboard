@@ -7,6 +7,7 @@ var DateTime = luxon.DateTime;
 // init search history
 var cityHistory = [];
 
+// DOM variables
 var cityNameEl = document.querySelector("#cityName");
 var currDateEl = document.querySelector("#currDate");
 var weatherIconEl = document.querySelector("#weatherIcon");
@@ -16,6 +17,7 @@ var currHumEl = document.querySelector("#currHum");
 var currUVEl = document.querySelector("#currUV");
 var weatherForecastEl = document.querySelector("#weatherForecast");
 
+// init city name variable
 var cityName;
 
 // geolocation api to provide lat and lon values given a city name, only for US locations
@@ -35,6 +37,7 @@ var getGeoLocation = function(city) {
                     // stores city name
                     cityName = data[0].name;
 
+                    // saves to local storage and reloads city history
                     saveSearchHistory();
                     loadSearchHistory();
                 });
@@ -56,6 +59,7 @@ var getWeatherData = function(lat,lon) {
         .then(function(response) {
             if (response.ok) {
                 response.json().then(function(data) {
+                    // updates weather display
                     updateWeather(data);
                 });
             }
@@ -70,6 +74,7 @@ var getWeatherData = function(lat,lon) {
 
 // updates weather display for current and forecast
 var updateWeather = function(data) {
+    // uses luxon for date
     var currDate = DateTime.now();
 
     cityNameEl.innerHTML = cityName;
@@ -80,6 +85,7 @@ var updateWeather = function(data) {
     currHumEl.innerHTML = data.current.humidity;
     currUVEl.innerHTML = data.current.uvi;
 
+    // logic for UV index
     $("#currUV").removeClass("bg-success bg-warning")
     if (data.current.uvi < 4) {
         $("#currUV").addClass("bg-success");
@@ -108,6 +114,7 @@ var updateWeather = function(data) {
     }
 };
 
+// logic for history, display when history is present, hide when no history available
 var dispClearHistory = function() {
     if (cityHistory.length > 0) {
         $("#clearHistory").removeClass("d-none");
@@ -117,9 +124,11 @@ var dispClearHistory = function() {
     }
 };
 
+// loads search history from local storage and generates buttons
 var loadSearchHistory = function() {
     cityHistory = JSON.parse(localStorage.getItem("search"));
 
+    // flushes city history DOM
     $("#cityHistory").html("");
 
     if (!cityHistory) {
@@ -128,7 +137,7 @@ var loadSearchHistory = function() {
         return false;
     }
 
-
+    // generates buttons based on history
     for (var i = 0; i < cityHistory.length; i++) {
         var btn = document.createElement("button");
         btn.className = "btnHistory col-12 btn btn-secondary my-1 text-dark fw-bold";
@@ -136,16 +145,20 @@ var loadSearchHistory = function() {
         $("#cityHistory").append(btn);
     }
 
+    // runs logic for clear history button
     dispClearHistory();
 };
 
+// organizes city history array and saves to local storage
 var saveSearchHistory = function() {
+    // removes search if it already exists in history
     for (var i = 0; i < cityHistory.length; i++) {
         if (cityName === cityHistory[i]) {
             cityHistory.splice(i, 1);
         }
     }
 
+    // saves most recent search to top of array
     cityHistory.unshift(cityName);
     while (cityHistory.length > 8) {
         cityHistory.pop();
@@ -154,6 +167,7 @@ var saveSearchHistory = function() {
     localStorage.setItem("search", JSON.stringify(cityHistory));
 };
 
+// event listener for form button
 $("#btnSearch").on("click", function(event) {
     event.preventDefault();
 
@@ -164,20 +178,28 @@ $("#btnSearch").on("click", function(event) {
         return false;
     }
 
+    // starts code for weather display
     getGeoLocation(citySearch);
 
+    // resets form after submission
     $("form").trigger("reset");
 });
 
+// event listener for city history searches
 $("#cityHistory").on("click", ".btnHistory", function(event) {
     var citySearch = $(this).text();
+    // starts code for weather display
     getGeoLocation(citySearch);
 });
 
+// event listener for clear history button
 $("#btnClearHistory").on("click", function(event) {
+    // resets city history array and saves to local storage
     cityHistory = [];
     localStorage.setItem("search", JSON.stringify(cityHistory));
+    // regenerates loaded history display
     loadSearchHistory();
 });
 
+// loads history from local storage on page init
 loadSearchHistory();
