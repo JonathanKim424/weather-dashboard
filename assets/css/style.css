@@ -5,6 +5,10 @@ header {
   height: 100px;
 }
 
+.uvIndex {
+  width: 45px;
+}
+
 .forecastCard {
   min-width: 150px;
 }

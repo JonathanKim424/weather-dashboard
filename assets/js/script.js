@@ -23,6 +23,10 @@ var getGeoLocation = function(city) {
         .then(function(response) {
             if (response.ok) {
                 response.json().then(function(data) {
+                    if (data.length === 0) {
+                        alert("Error: City not found");
+                        return false;
+                    }
                     // gives weather one call api lat & lon data
                     getWeatherData(data[0].lat,data[0].lon);
                     // stores city name
@@ -70,6 +74,20 @@ var updateWeather = function(data) {
     currHumEl.innerHTML = data.current.humidity;
     currUVEl.innerHTML = data.current.uvi;
 
+    $("#currUV").removeClass("bg-success bg-warning")
+    if (data.current.uvi < 4) {
+        $("#currUV").addClass("bg-success");
+    }
+    else if (data.current.uvi > 3 && data.current.uvi < 8) {
+        $("#currUV").addClass("bg-warning");
+    }
+    else if (data.current.uvi > 7) {
+        $("#currUV").addClass("bg-danger");
+    }
+
+    // flush forecast
+    weatherForecastEl.innerHTML = "";
+
     // daily data starts at 0 for today, hence forecast starts at 1
     for (var i = 1; i < 6; i++) {
         var forecastDayEl = document.createElement("div");
@@ -84,4 +102,17 @@ var updateWeather = function(data) {
     }
 };
 
-getGeoLocation("El Paso");
+$("button").on("click", function(event) {
+    event.preventDefault();
+
+    var citySearch = $("#citySearch").val().trim();
+    
+    if (!citySearch) {
+        alert("Search field empty!");
+        return false;
+    }
+
+    getGeoLocation(citySearch);
+});
+
+getGeoLocation("Austin");

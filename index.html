@@ -47,15 +47,18 @@
             <main class="col-12 col-lg-9">
                 <!-- weather display -->
                 <div class="row mb-1">
-                    <section class="border border-dark border-1 bg-info">
+                    <section class="border border-dark border-1 bg-info pb-2">
                         <!-- current weather -->
                         <p class="cityHeader fs-2 fw-bold">
-                            <span id="cityName">City</span> (<span id="currDate">1/1/2020</span>) <span id="weatherIcon"></span>
+                            <span id="cityName">City</span> (<span id="currDate">mm/dd/yyyy</span>) <span id="weatherIcon"></span>
                         </p>
                         <p class="weatherInfo">Temp: <span id="currTemp">??.?</span>&deg;F</p>
                         <p class="weatherInfo">Wind: <span id="currWind">??.?</span> MPH</p>
                         <p class="weatherInfo">Humidity: <span id="currHum">??.?</span>%</p>
-                        <p class="weatherInfo">UV Index: <span id="currUV">??.?</span></p>
+                        <div class="weatherInfo">
+                            UV Index: 
+                            <div class="d-inline-block rounded-1 text-white text-center fw-bold uvIndex" id="currUV">??.?</div>
+                        </div>
                     </section>
                 </div>
         
