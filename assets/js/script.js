@@ -4,6 +4,9 @@ var apiKey = "83bebf1283c4aa8fc9f9e297ba8c74e3";
 // luxon DateTime call
 var DateTime = luxon.DateTime;
 
+// init search history
+var cityHistory = [];
+
 var cityNameEl = document.querySelector("#cityName");
 var currDateEl = document.querySelector("#currDate");
 var weatherIconEl = document.querySelector("#weatherIcon");
@@ -31,6 +34,9 @@ var getGeoLocation = function(city) {
                     getWeatherData(data[0].lat,data[0].lon);
                     // stores city name
                     cityName = data[0].name;
+
+                    saveSearchHistory();
+                    loadSearchHistory();
                 });
             }
             else {
@@ -102,7 +108,53 @@ var updateWeather = function(data) {
     }
 };
 
-$("button").on("click", function(event) {
+var dispClearHistory = function() {
+    if (cityHistory.length > 0) {
+        $("#clearHistory").removeClass("d-none");
+    }
+    if (cityHistory.length === 0) {
+        $("#clearHistory").addClass("d-none");
+    }
+};
+
+var loadSearchHistory = function() {
+    cityHistory = JSON.parse(localStorage.getItem("search"));
+
+    $("#cityHistory").html("");
+
+    if (!cityHistory) {
+        cityHistory = [];
+        dispClearHistory();
+        return false;
+    }
+
+
+    for (var i = 0; i < cityHistory.length; i++) {
+        var btn = document.createElement("button");
+        btn.className = "btnHistory col-12 btn btn-secondary";
+        btn.textContent = cityHistory[i];
+        $("#cityHistory").append(btn);
+    }
+
+    dispClearHistory();
+};
+
+var saveSearchHistory = function() {
+    for (var i = 0; i < cityHistory.length; i++) {
+        if (cityName === cityHistory[i]) {
+            cityHistory.splice(i, 1);
+        }
+    }
+
+    cityHistory.unshift(cityName);
+    while (cityHistory.length > 8) {
+        cityHistory.pop();
+    }
+
+    localStorage.setItem("search", JSON.stringify(cityHistory));
+};
+
+$("#btnSearch").on("click", function(event) {
     event.preventDefault();
 
     var citySearch = $("#citySearch").val().trim();
@@ -115,4 +167,15 @@ $("button").on("click", function(event) {
     getGeoLocation(citySearch);
 });
 
-getGeoLocation("Austin");
+$("#cityHistory").on("click", ".btnHistory", function(event) {
+    var citySearch = $(this).text();
+    getGeoLocation(citySearch);
+});
+
+$("#btnClearHistory").on("click", function(event) {
+    cityHistory = [];
+    localStorage.setItem("search", JSON.stringify(cityHistory));
+    loadSearchHistory();
+});
+
+loadSearchHistory();

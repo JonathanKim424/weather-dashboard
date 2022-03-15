@@ -32,15 +32,17 @@
                         <!-- city search form -->
                         <label class="form-label fw-bold fs-2" for="citySearch">Search for a City:</label>
                         <input class="form-input" type="text" id="citySearch" name="citySearch" value="San Diego">
-                        <button class="btn btn-primary" type="submit">Search</button>
+                        <button class="btn btn-primary" id="btnSearch" type="submit">Search</button>
                     </form>
                 </div>
     
                 <div class="row mx-2 p-1">
                     <section id="cityHistory">
                         <!-- search history -->
-                        History goes here
                     </section>
+                    <div class="mt-2 pt-2 border-top border-dark border-2 text-center d-none" id="clearHistory">
+                        <button class="btn btn-danger" id="btnClearHistory">Clear History</button>
+                    </div>
                 </div>
             </aside>
             
